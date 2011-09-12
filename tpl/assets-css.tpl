@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="<?php _e($mp_defs['plugin_path']) ?>/assets/css/ui.jquery.css" type="text/css" media="all" />
