@@ -110,15 +110,19 @@
 		</thead>
 		<tbody>
 			<?php if (count($articles)) : ?>
-				<?php for ($a = 0; $a < count($articles); $a ++) : ?>
-					<?php if ($articles[$a]->ID) : ?>
+				<?php foreach ($articles as $_key => $_article) : ?>
+					<?php if ($_article->ID) : ?>
 						<tr id="180_article_record_<?php echo($articles[$a]->ID) ?>">
-							<td align="left"><?php _e($articles[$a]->post_title) ?></td>
-							<td align="left"><?php _e(($articles[$a]->comment_count > 0) ? 'Yes' : 'No') ?></td>
-							<td align="left"><input type="button" value="Syndicate to <?php _e($mp_defs['app_name']) ?>" onclick="syndicate_article(<?php echo($articles[$a]->ID) ?>, <?php echo(($articles[$a]->comment_count > 0) ? 1 : 0) ?>);"></td>
+							<td align="left"><?php _e($_article->post_title) ?></td>
+							<td align="left"><?php _e(($_article->comment_count > 0) ? 'Yes' : 'No') ?></td>
+							<?php if ($_article->post_id): ?>
+								<td align="left"><input type="button" class="disabled" value="Syndicated" disabled="DISABLE"/></td>
+							<?php else: ?>
+								<td align="left"><input type="button" value="Syndicate to <?php _e($mp_defs['app_name']) ?>" onclick="syndicate_article(<?php echo($_article->ID) ?>, <?php echo(($_article->comment_count > 0) ? 1 : 0) ?>);"></td>
+							<?php endif ?>
 						</tr>
 					<?php endif ?>
-				<?php endfor; ?>
+				<?php endforeach; ?>
 			<?php else : ?>
 				<tr>
 					<td colspan="3">

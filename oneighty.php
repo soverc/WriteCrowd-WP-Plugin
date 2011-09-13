@@ -388,16 +388,27 @@ function wp_oneighty_existing()
 	require_once($mp_defs['class_path'].'/xmlrpc/lib/xmlrpc.inc');
 
 	$user     = wp_oneighty_user_details();
-	$articles = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE post_status = 'publish' AND post_type = 'post' AND post_title != 'Hello world!'");
+	//$articles = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE post_status = 'publish' AND post_type = 'post' AND post_title != 'Hello world!'");
+	//do we really need to expluded hello world?
+//	var_dump("SELECT * FROM {$wpdb->prefix}posts WHERE post_status = 'publish' AND post_type = 'post'");
+	//$articles = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE post_status = 'publish' AND post_type = 'post'");
+	$articles = $wpdb->get_results("SELECT A.*, B.post_id FROM {$wpdb->prefix}posts AS A
+		LEFT JOIN {$wpdb->prefix}mediaplace_posts AS B ON A.id = B.post_id
+		WHERE A.post_status = 'publish' AND A.post_type = 'post'
+		");
 
+	/*
 	if (count($articles)) {
+		//this messes with the array keys, need foreach access to $articles 
+		// from here on out.
 		for ($i = 0; $i < count($articles); $i ++) {
 			if (wp_oneighty_is_article($articles[$i]->ID)) {
 				unset($articles[$i]);
 			}
 		}
 	}
-	
+	 */
+
 	require_once($mp_defs['template_path'].'/existing.tpl');
 }
 
