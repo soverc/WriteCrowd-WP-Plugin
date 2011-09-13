@@ -510,6 +510,8 @@ function wp_oneighty_submit()
 				if (!count($syndicated)) {
 					$_taga = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_a']));
 					$_tagb = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_b']));
+					$_tagc = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_c']));
+					$_tagd = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_d']));
 					
 					$details = array(
 						'_method'              => 'post', 
@@ -519,12 +521,10 @@ function wp_oneighty_submit()
 						'title'                => strip_tags($_POST['title']),
 						'description'          => strip_tags($_POST['excerpt']),
 						'category_id'          => strip_tags($_POST['mediaplace_cat_id']),
-						'secondcategory_id'    => null, 
-						'subcategory_id'       => strip_tags($_POST['mediaplace_subcat_id']), 
-						'secondsubcategory_id' => null, 
+						'secondcategory_id'    => strip_tags($_POST['mediaplace_secondcat_id']), 
 						'group_id'             => strip_tags($_POST['mediaplace_group_id']), 
 						'private'              => ((null == $_POST['mediaplace_group_privacy']) ? 0 : strip_tags($_POST['mediaplace_group_privacy'])), 
-						'tag_words'            => "{$taga},{$tagb}",
+						'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
 						'cost'                 => strip_tags($_POST['mediaplace_cost']), 
 						'allow_free'           => strip_tags($_POST['mediaplace_allow_free']),
 						'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_POST['title']))),
@@ -939,9 +939,7 @@ function wp_oneighty_comment_show($comment)
 				'title'                => strip_tags($_article->post_title),
 				'description'          => strip_tags($_article->post_excerpt),
 				'category_id'          => strip_tags($_POST['category_id']),
-				'secondcategory_id'    => null, 
-				'subcategory_id'       => strip_tags($_POST['subcategory_id']), 
-				'secondsubcategory_id' => null, 
+				'secondcategory_id'    => strip_tags($_POST['secondcategory_id']),
 				'group_id'             => 0, 
 				'private'              => 0, 
 				'tag_words'            => "{$taga}:{$tagb}",

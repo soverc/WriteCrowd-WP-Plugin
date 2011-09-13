@@ -21,31 +21,7 @@
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			// jQuery('#oneighty_syndicate_do').attr('disabled', true);
-			
-			jQuery('#mediaplace_cat_id').change(function(){
-				jQuery.ajax({
-					type: 'post',
-					url: '<?php echo(admin_url("admin-ajax.php")) ?>',
-					async: false,
-					dataType: 'json',
-					data: {
-						action: 'oneighty_jaxer',
-						route: 'oneighty_subcategories_grab',
-						key: '<?php echo($user->data->account_key) ?>',
-						category_id: jQuery('#mediaplace_cat_id').val()
-					},
-					success: function(response){
-						var sc1_html = '<option value="">Please choose a subcategory ...</option>';
-						jQuery.each(response, function(i, cat){
-							sc1_html += '<option value="' + cat.id + '">' + cat.label + '</option>';
-						});
-						
-						jQuery('#mediaplace_subcat_id').html(sc1_html);
-						jQuery('#mediaplace_subcat_id').attr('disabled', false);
-					}
-				});
-			});
-			
+
 			jQuery('#mediaplace_secondcat_id').change(function(){
 				jQuery.ajax({
 					type: 'post',
@@ -95,15 +71,15 @@
 							content: tinyMCE.get('content').getContent(),
 							excerpt: jQuery('#excerpt').val(),
 							mediaplace_cat_id: jQuery('#mediaplace_cat_id').val(),
-							mediaplace_secondcat_id: 0,
-							mediaplace_subcat_id: jQuery('#mediaplace_subcat_id').val(),
-							mediaplace_secondsubcat_id: 0,
+							mediaplace_secondcat_id: jQuery('#mediaplace_secondcat_id').val(),
 							mediaplace_group_id: 0,
 							mediaplace_group_privacy: 0,
 							mediaplace_cost: 0.00,
 							mediaplace_allow_free: 1,
 							mediaplace_tag_word_a: jQuery('#mediaplace_tag_word_a').val(),
 							mediaplace_tag_word_b: jQuery('#mediaplace_tag_word_b').val(),
+							mediaplace_tag_word_c: jQuery('#mediaplace_tag_word_c').val(),
+							mediaplace_tag_word_d: jQuery('#mediaplace_tag_word_d').val(),
 							mediaplace_syndicate_to: jQuery("input[name='mediaplace_syndicate_to']:checked").val(),
 							wp_type: jQuery('#publish').val()
 						},
@@ -142,11 +118,8 @@
 				does_need.push('Category');
 			}
 			
-			if (jQuery('#mediaplace_subcat_id').val() == '') {
-				is_valid = false;
-				does_need.push('Sub-Category');
-			}
-			
+			//all tags are optional
+/*
 			if (jQuery('#mediaplace_tag_word_a').val() == '') {
 				is_valid = false;
 				does_need.push('Tag Word 1');
@@ -157,6 +130,7 @@
 				does_need.push('Tag Word 2');
 			}
 			
+*/
 			if (is_valid) {
 				return (true);
 			}
@@ -181,6 +155,7 @@
 		<?php wp_oneighty_category_select('mediaplace_cat_id', $user->data->account_key); ?>
 	</div>
 	
+<!--
 	<div class="misc-pub-section">
 		<span>
 			<?php _e('Sub-Category') ?>:
@@ -190,6 +165,7 @@
 			<option value="">You must first choose a category</option>
 		</select>
 	</div>
+-->
 	
 	<div class="misc-pub-section">
 		<span>
@@ -199,6 +175,7 @@
 		<?php wp_oneighty_category_select('mediaplace_secondcat_id', $user->data->account_key); ?>
 	</div>
 	
+<!--
 	<div class="misc-pub-section">
 		<span>
 			<?php _e('Sub-Category 2') ?>:
@@ -206,6 +183,7 @@
 			<br />
 		<select name="mediaplace_secondsubcat_id" id="mediaplace_secondsubcat_id" disabled="true"></select>
 	</div>
+-->
 	
 	<div class="misc-pub-section">
 		<span>
@@ -239,6 +217,8 @@
 			<br />
 			<input type="text" name="mediaplace_tag_word_a" id="mediaplace_tag_word_a">
 			<input type="text" name="mediaplace_tag_word_b" id="mediaplace_tag_word_b">
+			<input type="text" name="mediaplace_tag_word_c" id="mediaplace_tag_word_c">
+			<input type="text" name="mediaplace_tag_word_d" id="mediaplace_tag_word_d">
 	</div>
 	
 	<div class="misc-pub-section">
