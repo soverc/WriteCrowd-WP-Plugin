@@ -21,10 +21,10 @@ $mp_defs = array(
 	'class_path'       => ABSPATH.'wp-content/plugins/oneighty/classes', 
 	'assets_path'      => ABSPATH.'wp-content/plugins/oneighty/assets', 
 	'images_path'      => WP_CONTENT_URL.'/plugins/oneighty/images', 
-	'base_url'         => 'https://www.180create.com/', 
-	'xmlrpc_url'       => 'https://www.180create.com/feeds/xmlrpc.php', 
-	'jsonrpc_url'      => 'https://www.180create.com/feeds/jsonrpc.php', 
-	'registration_url' => 'https://www.180create.com/signup.pl'
+	'base_url'         => 'https://www.writecrowd.com/', 
+	'xmlrpc_url'       => 'https://www.writecrowd.com/feeds/xmlrpc.php', 
+	'jsonrpc_url'      => 'https://www.writecrowd.com/feeds/jsonrpc.php', 
+	'registration_url' => 'https://www.writecrowd.com/signup.pl'
 );
 
 if (is_admin()) {
