@@ -61,6 +61,9 @@ if (is_admin()) {
 	// Display Post Title
 	add_filter('the_title', 'wp_oneighty_post_title');
 
+	// Display Page Title
+	add_filter('single_post_title', 'wp_oneighty_post_title');
+
 	// Display Post Content
 	add_filter('the_content', 'wp_oneighty_post_content');
 
