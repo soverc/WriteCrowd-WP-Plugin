@@ -503,63 +503,77 @@ function wp_oneighty_submit()
 		if ($_POST['mediaplace_syndicate_to']) {
 			$post_id = strip_tags($_POST['id']);
 			$user    = wp_oneighty_user_details();
-			
 			if(null != $post_id) {
 				$syndicated = $wpdb->get_results("SELECT mediaplace_id FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '{$post_id}'");
 				
-				if (!count($syndicated)) {
-					$_taga = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_a']));
-					$_tagb = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_b']));
-					$_tagc = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_c']));
-					$_tagd = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_d']));
-					
-					$details = array(
-						'_method'              => 'post', 
-						'_key'                 => $user->data->account_key, 
-						'author_id'            => $user->data->id,
-						'content'              => $_POST['content'],
-						'title'                => strip_tags($_POST['title']),
-						'description'          => strip_tags($_POST['excerpt']),
-						'category_id'          => strip_tags($_POST['mediaplace_cat_id']),
-						'secondcategory_id'    => strip_tags($_POST['mediaplace_secondcat_id']), 
-						'group_id'             => strip_tags($_POST['mediaplace_group_id']), 
-						'private'              => ((null == $_POST['mediaplace_group_privacy']) ? 0 : strip_tags($_POST['mediaplace_group_privacy'])), 
-						'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
-						'cost'                 => strip_tags($_POST['mediaplace_cost']), 
-						'allow_free'           => strip_tags($_POST['mediaplace_allow_free']),
-						'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_POST['title']))),
-						'from_blog'            => get_bloginfo('name'), 
-						'from_url'             => get_bloginfo('url')
+				if (count($syndicated)) {
+					$ajax = array(
+						'success' => false,
+						'message' => "Article already syndicated."
 					);
-					
-					$now     = date('Y-m-d H:i:s');
-					$article = __json_call($details);
-					
-					if (isset($article['dec']->error)) {
-						$ajax = array(
-							'success' => false,
-							'message' => $article['dec']->error
-						);
-					} else {
-						$sql     = "INSERT INTO {$wpdb->prefix}mediaplace_posts (
-							post_id, 
-							mediaplace_id,
-							article_data
-						) VALUES (
-							'{$post_id}',
-							'{$article['dec']->id}',
-							'".mysql_real_escape_string(json_encode($article['dec']))."'
-						)";
-						
-						$wpdb->query($sql);
-							$ajax = array(
-								'success' => true, 
-								'message' => null, 
-								'article' => $article['dec']
-							);
-					}
-				echo(json_encode($ajax));
+
+//					echo(json_encode($ajax));
+//					exit();
 				}
+				$_taga = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_a']));
+				$_tagb = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_b']));
+				$_tagc = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_c']));
+				$_tagd = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_d']));
+				
+				$details = array(
+					'_method'              => 'post', 
+					'_key'                 => $user->data->account_key, 
+					'author_id'            => $user->data->id,
+					'content'              => $_POST['content'],
+					'title'                => strip_tags($_POST['title']),
+					'description'          => strip_tags($_POST['excerpt']),
+					'category_id'          => strip_tags($_POST['mediaplace_cat_id']),
+					'secondcategory_id'    => strip_tags($_POST['mediaplace_secondcat_id']), 
+					'group_id'             => strip_tags($_POST['mediaplace_group_id']), 
+					'private'              => ((null == $_POST['mediaplace_group_privacy']) ? 0 : strip_tags($_POST['mediaplace_group_privacy'])), 
+					'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
+					'cost'                 => strip_tags($_POST['mediaplace_cost']), 
+					'allow_free'           => strip_tags($_POST['mediaplace_allow_free']),
+					'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_POST['title']))),
+					'from_blog'            => get_bloginfo('name'), 
+					'from_url'             => get_bloginfo('url')
+				);
+				
+				$now     = date('Y-m-d H:i:s');
+				$article = __json_call($details);
+
+				//if $article['dec'] is null, there was a json_decode() error
+				if ( $article['dec'] == NULL ) {
+					$ajax = array(
+						'success' => false,
+						'message' => "Communications error"
+					);
+
+				} else if (isset($article['dec']->error)) {
+					$ajax = array(
+						'success' => false,
+						'message' => $article['dec']->error
+					);
+
+				} else {
+					$sql     = "INSERT INTO {$wpdb->prefix}mediaplace_posts (
+						post_id, 
+						mediaplace_id,
+						article_data
+					) VALUES (
+						'{$post_id}',
+						'{$article['dec']->id}',
+						'".mysql_real_escape_string(json_encode($article['dec']))."'
+					)";
+					
+					$wpdb->query($sql);
+						$ajax = array(
+							'success' => true, 
+							'message' => null, 
+							'article' => $article['dec']
+						);
+				}
+			echo(json_encode($ajax));
 			}
 		}
 	}
@@ -1015,6 +1029,7 @@ function __json_call($_data)
 	));
 	
 	$_request  = file_get_contents($mp_defs['jsonrpc_url'], false, $_context);
+
 	$_response = array(
 		'enc' => stripslashes($_request), 
 		'dec' => json_decode($_request)
