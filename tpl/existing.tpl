@@ -11,29 +11,6 @@
 				width: 400
 			});
 			
-			$('#180_category_id').change(function() {
-				jQuery.ajax({
-					type:     'post', 
-					url:      '<?php echo(admin_url('admin-ajax.php')) ?>', 
-					async:    false, 
-					dataType: 'json', 
-					data: {
-						action: 'oneighty_jaxer', 
-						route: 'oneighty_subcategories_grab', 
-						key: '<?php echo($user->data->account_key) ?>', 
-						category_id: jQuery('#180_category_id').val()
-					}, 
-					success: function(response) {
-						var sc1_html = '<option value="">Please choose a subcategory ...</option>';
-						jQuery.each(response, function(i, cat) {
-							sc1_html += '<option value="' + cat.id + '">' + cat.label + '</option>';
-						});
-						
-						jQuery('#180_subcategory_id').html(sc1_html);
-						jQuery('#180_subcategory_id').attr('disabled', false);
-					}
-				});
-			});
 		});
 		function syndicate_article(aid, has_comments) {
 			var syndicate_comments = false;
@@ -65,9 +42,11 @@
 							route: 'oneighty_syndicate_existing', 
 							article_id: aid, 
 							category_id: jQuery('#180_category_id').val(), 
-							subcategory_id: jQuery('#180_subcategory_id').val(), 
+							secondcategory_id: jQuery('#180_secondcategory_id').val(), 
 							tag_word_a: jQuery('#180_tag_word_a').val(), 
 							tag_word_b: jQuery('#180_tag_word_b').val(), 
+							tag_word_c: jQuery('#180_tag_word_c').val(), 
+							tag_word_d: jQuery('#180_tag_word_d').val(), 
 							comments: syndicate_comments
 						}, 
 						success: function(returned) {
@@ -77,7 +56,10 @@
 									jQuery('#180_syndication_info_div').dialog('option', 'buttons', {
 										'Finish': function() {
 											jQuery('#180_syndication_info_div').dialog('close');
-											jQuery('#180_article_record_' + aid).slideUp('slow');
+											jQuery('#180_article_sbtn_' + aid).attr('value', 'Syndicated');
+											jQuery('#180_article_sbtn_' + aid).attr('disabled', 'DISABLE');
+											jQuery('#180_article_sbtn_' + aid).attr('class', 'disabled');
+//											location.reload(true);
 										}
 									});
 								} else {
@@ -112,13 +94,13 @@
 			<?php if (count($articles)) : ?>
 				<?php foreach ($articles as $_key => $_article) : ?>
 					<?php if ($_article->ID) : ?>
-						<tr id="180_article_record_<?php echo($articles[$a]->ID) ?>">
+						<tr id="180_article_record_<?php echo($_article->ID) ?>">
 							<td align="left"><?php _e($_article->post_title) ?></td>
 							<td align="left"><?php _e(($_article->comment_count > 0) ? 'Yes' : 'No') ?></td>
 							<?php if ($_article->post_id): ?>
-								<td align="left"><input type="button" class="disabled" value="Syndicated" disabled="DISABLE"/></td>
+								<td align="left"><input type="button" class="disabled" id="180_article_sbtn_<?php echo($_article->ID);?>" value="Syndicated" disabled="DISABLE"/></td>
 							<?php else: ?>
-								<td align="left"><input type="button" value="Syndicate to <?php _e($mp_defs['app_name']) ?>" onclick="syndicate_article(<?php echo($_article->ID) ?>, <?php echo(($_article->comment_count > 0) ? 1 : 0) ?>);"></td>
+								<td align="left"><input type="button" id="180_article_sbtn_<?php echo($_article->ID);?>"  value="Syndicate to <?php _e($mp_defs['app_name']) ?>" onclick="syndicate_article(<?php echo($_article->ID) ?>, <?php echo(($_article->comment_count > 0) ? 1 : 0) ?>);"></td>
 							<?php endif ?>
 						</tr>
 					<?php endif ?>
@@ -142,6 +124,16 @@
 			<?php wp_oneighty_category_select('180_category_id', $user->data->account_key); ?>
 		</div>
 			<br>
+
+		<div class="misc-pub-section">
+			<span>
+				<?php _e('Category 2') ?>:
+			</span>
+				<br />
+			<?php wp_oneighty_category_select('180_secondcategory_id', $user->data->account_key); ?>
+		</div>
+			<br>
+<!--
 		<div class="misc-pub-section">
 			<span>
 				<?php _e('Sub-Category') ?>:
@@ -152,6 +144,7 @@
 			</select>
 		</div>
 			<br>
+-->
 		<div class="misc-pub-section">
 			<span>
 				<?php _e('Tag Words: ') ?>:
@@ -159,6 +152,8 @@
 				<br />
 				<input type="text" name="180_tag_word_a" id="180_tag_word_a">
 				<input type="text" name="180_tag_word_b" id="180_tag_word_b">
+				<input type="text" name="180_tag_word_c" id="180_tag_word_c">
+				<input type="text" name="180_tag_word_d" id="180_tag_word_d">
 		</div>
 	</div>
 <?php else : ?>

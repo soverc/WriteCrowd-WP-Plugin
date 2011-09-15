@@ -20,31 +20,7 @@
 	?>
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
-			// jQuery('#oneighty_syndicate_do').attr('disabled', true);
 
-			jQuery('#mediaplace_secondcat_id').change(function(){
-				jQuery.ajax({
-					type: 'post',
-					url: '<?php echo(admin_url("admin-ajax.php")) ?>',
-					async: false,
-					dataType: 'json',
-					data: {
-						action: 'oneighty_jaxer',
-						route: 'oneighty_subcategories_grab',
-						key: '<?php echo($user->data->account_key) ?>',
-						category_id: jQuery('#mediaplace_secondcat_id').val()
-					},
-					success: function(response){
-						var sc2_html = '';
-						jQuery.each(response, function(i, cat){
-							sc2_html += '<option value="' + cat.id + '">' + cat.label + '</option>';
-						});
-						
-						jQuery('#mediaplace_secondsubcat_id').html(sc2_html);
-						jQuery('#mediaplace_secondsubcat_id').attr('disabled', false);
-					}
-				});
-			});
 			
 			jQuery('#mediaplace_group_id').change(function(){
 				if (jQuery('#mediaplace_group_id').val() != 0) {
