@@ -947,6 +947,8 @@ function wp_oneighty_comment_show($comment)
 			$_article = $_article[0];
 			$_taga    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_a']));
 			$_tagb    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_b']));
+			$_tagc    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_c']));
+			$_tagd    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_d']));
 			$details  = array(
 				'_method'              => 'post', 
 				'_key'                 => $account->data->account_key, 
@@ -955,10 +957,12 @@ function wp_oneighty_comment_show($comment)
 				'title'                => strip_tags($_article->post_title),
 				'description'          => strip_tags($_article->post_excerpt),
 				'category_id'          => strip_tags($_POST['category_id']),
+				'subcategory_id'       => NULL,
 				'secondcategory_id'    => strip_tags($_POST['secondcategory_id']),
+				'secondsubcategory_id' => NULL, 
 				'group_id'             => 0, 
 				'private'              => 0, 
-				'tag_words'            => "{$taga}:{$tagb}",
+				'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
 				'cost'                 => 0.00, 
 				'allow_free'           => 1,
 				'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_article->post_title))),
@@ -967,8 +971,18 @@ function wp_oneighty_comment_show($comment)
 			);
 			$article = __json_call($details);
 			
-			if (isset($article['dec']->error)) {
-				$ajax['success'] = false;
+			//if $article['dec'] is null, there was a json_decode() error
+			if ( $article['dec'] == NULL ) {
+				$ajax = array(
+					'success' => false,
+					'message' => "Communications error"
+				);
+
+			} else if (isset($article['dec']->error)) {
+				$ajax = array(
+					'success' => false,
+					'message' => $article['dec']->error
+				);
 			} else {
 				$sql     = "INSERT INTO {$wpdb->prefix}mediaplace_posts (
 					post_id, 
