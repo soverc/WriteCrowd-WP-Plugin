@@ -3,7 +3,7 @@
 Plugin Name: 180Create Syndication
 Plugin URI: https://www.180create.com/
 Description: The 180Create Syndication Plugin allows you to submit your own articles to the 180Create Syndicate as well as pull content to your WordPress site from the 180Create Syndicate.
-Version: 0.98b-demo
+Version: 0.98c-demo
 Author: 180Create.com
 Author URI: https://www.180Create.com/
 */
@@ -12,7 +12,7 @@ Author URI: https://www.180Create.com/
 $mp_defs = array(
 	'plugin_name'      => '180Create Content Syndication', 
 	'app_name'         => '180Create', 
-	'plugin_version'   => '0.98b-demo', 
+	'plugin_version'   => '0.98c-demo', 
 	'min_php_version'  => '5.0', 
 	'min_wp_version'   => '2.6', 
 	'plugin_path'      => WP_CONTENT_URL.'/plugins/oneighty', 
