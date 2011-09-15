@@ -499,7 +499,7 @@ function wp_oneighty_submit()
 {	
 	global $wpdb, $mp_defs;
 
-	if ($_POST['wp_type'] == 'Publish') {
+	if ($_POST['wp_type'] == 'Publish' || $_POST['wp_type'] == 'Update') {
 		if ($_POST['mediaplace_syndicate_to']) {
 			$post_id = strip_tags($_POST['id']);
 			$user    = wp_oneighty_user_details();
@@ -512,8 +512,8 @@ function wp_oneighty_submit()
 						'message' => "Article already syndicated."
 					);
 
-//					echo(json_encode($ajax));
-//					exit();
+					echo(json_encode($ajax));
+					exit();
 				}
 				$_taga = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_a']));
 				$_tagb = strip_tags(preg_replace('/[^A-Za-z0-9_\-]/', '', $_POST['mediaplace_tag_word_b']));
