@@ -1,7 +1,25 @@
 <?php if ($user->logged) : ?>
 	<script type="text/javascript">
+
+		function disableDialogButton( dialog_selector, button_name )
+		{
+			var buttons = jQuery( dialog_selector + ' .ui-dialog-buttonpane button' );
+			for ( var i = 0; i < buttons.length; ++i )
+			{
+				var jButton = jQuery( buttons[i] );
+				if ( jButton.text() == button_name )
+				{
+					jButton.attr('disabled', 'disabled' ).addClass( 'disabled' );
+					return jButton;
+				}
+			}
+
+			return null;
+		}
+
 		jQuery(document).ready(function($) {
 			$('#180_syndication_info_div').dialog({
+				dialogClass: 'synddialog',
 				title: 'Syndicate Article', 
 				modal: true, 
 				resizable: false, 
@@ -31,6 +49,7 @@
 							}
 						});
 					}
+					disableDialogButton( '.synddialog', 'Syndicate' );
 					
 					jQuery.ajax({
 						type: 'post', 
@@ -57,7 +76,7 @@
 										'Finish': function() {
 											jQuery('#180_syndication_info_div').dialog('close');
 											jQuery('#180_article_sbtn_' + aid).attr('value', 'Syndicated');
-											jQuery('#180_article_sbtn_' + aid).attr('disabled', 'DISABLE');
+											jQuery('#180_article_sbtn_' + aid).attr('disabled', 'DISABLED');
 											jQuery('#180_article_sbtn_' + aid).attr('class', 'disabled');
 //											location.reload(true);
 										}
@@ -133,18 +152,7 @@
 			<?php wp_oneighty_category_select('180_secondcategory_id', $user->data->account_key); ?>
 		</div>
 			<br>
-<!--
-		<div class="misc-pub-section">
-			<span>
-				<?php _e('Sub-Category') ?>:
-			</span>
-				<br />
-			<select name="180_subcategory_id" id="180_subcategory_id" disabled="true">
-				<option value="">You must first choose a category</option>
-			</select>
-		</div>
-			<br>
--->
+
 		<div class="misc-pub-section">
 			<span>
 				<?php _e('Tag Words: ') ?>:
