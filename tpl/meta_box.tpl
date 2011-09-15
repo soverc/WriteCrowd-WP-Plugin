@@ -50,7 +50,7 @@
 							mediaplace_secondcat_id: jQuery('#mediaplace_secondcat_id').val(),
 							mediaplace_group_id: 0,
 							mediaplace_group_privacy: 0,
-							mediaplace_cost: 0.00,
+							mediaplace_price: jQuery('#mediaplace_price').val(),
 							mediaplace_allow_free: 1,
 							mediaplace_tag_word_a: jQuery('#mediaplace_tag_word_a').val(),
 							mediaplace_tag_word_b: jQuery('#mediaplace_tag_word_b').val(),
@@ -183,7 +183,7 @@
 			<?php _e('Cost') ?>:
 		</span>
 			<br />
-        <?php wp_oneighty_cost_select('mediaplace_cost') ?>
+        <?php wp_oneighty_cost_select('mediaplace_price') ?>
 	</div>
 	
 	<div class="misc-pub-section">

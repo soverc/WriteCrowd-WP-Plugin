@@ -534,8 +534,8 @@ function wp_oneighty_submit()
 					'group_id'             => strip_tags($_POST['mediaplace_group_id']), 
 					'private'              => ((null == $_POST['mediaplace_group_privacy']) ? 0 : strip_tags($_POST['mediaplace_group_privacy'])), 
 					'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
-					'cost'                 => strip_tags($_POST['mediaplace_cost']), 
-					'allow_free'           => strip_tags($_POST['mediaplace_allow_free']),
+					'cost'                 => strip_tags($_POST['mediaplace_price']), 
+					'allow_free'           => 0, //strip_tags($_POST['mediaplace_allow_free']),
 					'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_POST['title']))),
 					'from_blog'            => get_bloginfo('name'), 
 					'from_url'             => get_bloginfo('url')
@@ -963,8 +963,8 @@ function wp_oneighty_comment_show($comment)
 				'group_id'             => 0, 
 				'private'              => 0, 
 				'tag_words'            => "{$taga},{$tagb},{$tagc},{$tagd}",
-				'cost'                 => 0.00, 
-				'allow_free'           => 1,
+				'cost'                 => strip_tags($_POST['mediaplace_price']), 
+				'allow_free'           => 0, //strip_tags($_POST['mediaplace_allow_free']),
 				'name'                 => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($_article->post_title))),
 				'from_blog'            => get_bloginfo('name'), 
 				'from_url'             => get_bloginfo('url')
