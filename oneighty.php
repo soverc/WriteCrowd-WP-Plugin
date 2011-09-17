@@ -82,6 +82,8 @@ if (is_admin()) {
 	// Use Our Comments Template
 	add_filter('comments_template', 'wp_oneighty_comment_template_handler');
 	
+	wc_setup_actions();
+
 function wp_oneighty_is_article($id)
 {
 	global $wpdb, $mp_defs;
@@ -929,6 +931,9 @@ function wp_oneighty_comment_show($comment)
 	}
 
 	elseif ($_POST['route'] == 'remove_article_from_site') {
+		global $oWriteCrowd;
+		$oWriteCrowd->doRemoveArticle(addslashes($_POST['id']));
+		/*
 		$article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE ID = '".addslashes($_POST['id'])."'");
 		$article = $article[0];
 			$wpdb->query("DELETE FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".addslashes($_POST['id'])."'");
@@ -936,6 +941,7 @@ function wp_oneighty_comment_show($comment)
 			if (preg_match('/mediaplace_article:/', $article->post_content)) {
 				$wpdb->query("DELETE FROM {$wpdb->prefix}posts WHERE ID = '".addslashes($_POST['id'])."'");
 			}
+		 */
 	echo(true);
 	}
 	
@@ -1066,4 +1072,52 @@ function __log_oneighty_actions(array $_data)
 		return(false);
 	}
 }
-?>
+
+function wc_setup_actions() {
+// Libraries to load
+$aLibrary = array('wc_config', 'wc_actions');
+//$aLibrary = array('wc_actions');
+
+// Load the libraries
+foreach ($aLibrary as $sClass) {
+
+    // Make sure the file exists
+    if (!include_once(dirname(__FILE__)."/lib/{$sClass}.php")) {
+	die('problem loading libraries');
+    }
+}
+
+	global $wpdb;
+	global $oWriteCrowd;
+	Wc_Config::Init();
+	// Grab our class Instance
+	$oWriteCrowd = Wc_Actions::getInstance();
+
+        // See if we can display PHP errors
+/*
+        if (Wc_Config::Get('variables', 'enablePhpErrorReporting')) {
+
+                // Turn on PHP errors
+                $oWriteCrowd->setPhpErrorReporting(true);
+        } else {
+                
+                // Turn off PHP errors
+                $oWriteCrowd->setPhpErrorReporting(false);
+        }
+*/
+
+        // Set POST
+        $oWriteCrowd->setPostData($_POST);
+
+        // Set our namespace
+        $oWriteCrowd->setNamespace(Wc_Config::Get('variables', 'nameSpace'));
+        
+        // Set plugin path
+        $oWriteCrowd->setPluginPath(dirname(__FILE__));
+        
+        // Set plugin web path
+        $oWriteCrowd->setPluginWebPath(WP_CONTENT_URL."/plugins/{$oWriteCrowd->getNameSpace()}");
+        
+        // Set the Database Object
+        $oWriteCrowd->setDatabase($wpdb);
+}
