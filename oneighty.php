@@ -86,7 +86,7 @@ function wp_oneighty_is_article($id)
 {
 	global $wpdb, $mp_defs;
 	
-	$article = $wpdb->get_results("SELECT post_id FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".strip_tags($id)."'");
+	$article = $wpdb->get_results("SELECT post_id FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".addslashes($id)."'");
 	
 	if (count($article)) {
 		return(true);
@@ -99,7 +99,7 @@ function wp_oneighty_article_info($id)
 {
 	global $wpdb, $mp_defs;
 	
-	$article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".strip_tags($id)."'");
+	$article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".addslashes($id)."'");
 	
 	if (count($article)) {
 		$article       = $article[0];
@@ -504,7 +504,7 @@ function wp_oneighty_submit()
 
 	if ($_POST['wp_type'] == 'Publish' || $_POST['wp_type'] == 'Update') {
 		if ($_POST['mediaplace_syndicate_to']) {
-			$post_id = strip_tags($_POST['id']);
+			$post_id = addslashes($_POST['id']);
 			$user    = wp_oneighty_user_details();
 			if(null != $post_id) {
 				$syndicated = $wpdb->get_results("SELECT mediaplace_id FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '{$post_id}'");
@@ -896,8 +896,8 @@ function wp_oneighty_comment_show($comment)
 		if ('mediaplace' == $_POST['method']) {			
 			$data = array(
 				'_method'  => 'logon', 
-				'username' => strip_tags($_POST['uname']), 
-				'passwd'   => strip_tags($_POST['passwd'])
+				'username' => addslashes($_POST['uname']), 
+				'passwd'   => addslashes($_POST['passwd'])
 			);
 			$user = __json_call($data);
 					
@@ -929,12 +929,12 @@ function wp_oneighty_comment_show($comment)
 	}
 
 	elseif ($_POST['route'] == 'remove_article_from_site') {
-		$article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE ID = '".strip_tags($_POST['id'])."'");
+		$article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE ID = '".addslashes($_POST['id'])."'");
 		$article = $article[0];
-			$wpdb->query("DELETE FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".strip_tags($_POST['id'])."'");
+			$wpdb->query("DELETE FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '".addslashes($_POST['id'])."'");
 			
 			if (preg_match('/mediaplace_article:/', $article->post_content)) {
-				$wpdb->query("DELETE FROM {$wpdb->prefix}posts WHERE ID = '".strip_tags($_POST['id'])."'");
+				$wpdb->query("DELETE FROM {$wpdb->prefix}posts WHERE ID = '".addslashes($_POST['id'])."'");
 			}
 	echo(true);
 	}
@@ -946,7 +946,7 @@ function wp_oneighty_comment_show($comment)
 	elseif ($_POST['route'] == 'oneighty_syndicate_existing') {
 		$ajax = array();
 		if (isset($_POST['article_id'])) {
-			$_article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE ID = ".strip_tags($_POST['article_id']));
+			$_article = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE ID = ".addslashes($_POST['article_id']));
 			$_article = $_article[0];
 			$_taga    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_a']));
 			$_tagb    = preg_replace('/[^A-Za-z0-9_\-]/', '', strip_tags($_POST['tag_word_b']));
@@ -992,14 +992,14 @@ function wp_oneighty_comment_show($comment)
 					mediaplace_id,
 					article_data
 				) VALUES (
-					'".strip_tags($_POST['article_id'])."',
+					'".addslashes($_POST['article_id'])."',
 					'{$article['dec']->id}',
 					'".mysql_real_escape_string(json_encode($article['dec']))."'
 				)";
 				
 				if ($wpdb->query($sql)) {
 					if ($_POST['comments']) {
-						$comments = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}comments WHERE comment_post_ID = ".strip_tags($_POST['article_id'])." AND comment_approved = 1");
+						$comments = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}comments WHERE comment_post_ID = ".addslashes($_POST['article_id'])." AND comment_approved = 1");
 						
 						foreach ($comments as $cmnt) {
 							$details = array(
