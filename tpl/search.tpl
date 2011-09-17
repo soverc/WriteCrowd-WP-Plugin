@@ -111,7 +111,6 @@
 							</tr>
 						<?php else : ?>
 							<?php foreach($articles['dec'] as $a): ?>
-								<?php if ( ! in_array($a->id, $syndicated_posts)) : ?>
 									<tr id="article-result-<?php _e($a->id) ?>">
 										<td class="post-title">
 											<a href="#" onclick="jQuery.display_article('<?php _e($a->id) ?>', '<?php _e($a->title) ?>');"><?php _e(stripslashes($a->title)) ?></a>
@@ -130,15 +129,14 @@
 											<?php endif ?>
 										</td>
 										<td>
-											<?php if ($a->cost == '0.00') : ?>
+											<?php if ( ! in_array($a->id, $syndicated_posts)) : ?>
 												<input type="button" onclick="jQuery.syndicate_comments('<?php _e($a->id) ?>', '<?php _e(addslashes($a->title))?>');" value="Syndicate">
 											<?php else : ?>
-												<input type="button" onclick="jQuery.syndicate_comments('<?php _e($a->id) ?>', '<?php _e(addslashes($a->title))?>');" value="Syndicate">
+												<input type="button" disabled="DISABLED" class="disabled" value="Syndicated">
 												<!-- <a href="#">$<?php _e($a->cost) ?> without Ads</a> -->
 											<?php endif; ?>
 										</td>
 									</tr>
-								<?php endif; ?>
 							<?php endforeach; ?>
 						<?php endif; ?>
 						

@@ -1,7 +1,24 @@
 <div class="wrap">
 	<script type="text/javascript">
+		function disableDialogButton( dialog_selector, button_name )
+		{
+			var buttons = jQuery( dialog_selector + ' .ui-dialog-buttonpane button' );
+			for ( var i = 0; i < buttons.length; ++i )
+			{
+				var jButton = jQuery( buttons[i] );
+				if ( jButton.text() == button_name )
+				{
+					jButton.attr('disabled', 'disabled' ).addClass( 'disabled' );
+					return jButton;
+				}
+			}
+
+			return null;
+		}
+
 		jQuery(document).ready(function() {
 			jQuery('#remove_article').dialog({
+				dialogClass: 'removeDialog',
 				title: 'Remove Article', 
 				autoOpen: false,
 				height: 200, 
@@ -14,16 +31,18 @@
 		function removeArticle(post_id) {
 			jQuery('#remove_article').dialog('option', 'buttons', {
 				'Yes': function() {
+					disableDialogButton('.removeDialog', 'Yes');
 					jQuery.ajax({
 						type: 'post',
 						url: '<?php echo(admin_url("admin-ajax.php")) ?>', 
-						dataType: 'text', 
+						dataType: 'json', 
 						data: {
 							action: 'oneighty_jaxer', 
 							route: 'remove_article_from_site',
 							id: post_id
 						}, 
 						success: function(response) {
+							if (response.success) {
 							jQuery('#remove_article').html('The article has been removed from your site.');
 							jQuery('#remove_article').dialog('option', 'buttons', {
 								'Continue': function() {
@@ -31,6 +50,9 @@
 									jQuery('#article_info_' + post_id).slideUp();
 								}
 							});
+							} else {
+							jQuery('#remove_article').html('Failed to remove article. :(');
+							}
 						}
 					});
 				},
@@ -40,7 +62,9 @@
 				}
 			});
 
+			jQuery('#remove_article').html('Are you sure you wish to remove this article from your blog?');
 			jQuery('#remove_article').dialog('open');
+			return false;
 		}
 	</script>
 	<h2><?php _e($mp_defs['app_name']) ?> - Syndicated Articles</h2>
@@ -84,7 +108,7 @@
 							</td>
 							<td>
 								<a href="<?php _e(get_bloginfo('url')) ?>/?p=<?php _e($a->post_id) ?>">View</a> | 
-								<a href="#" onclick="removeArticle('<?php _e($a->post_id) ?>');">Remove</a>
+								<a href="#" onclick="return removeArticle('<?php _e($a->post_id) ?>');">Remove</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>
