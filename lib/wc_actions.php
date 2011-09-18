@@ -341,7 +341,6 @@ class Wc_Actions {
 		// Make sure this is actually a
 		// 180Create article
 		if ($wcid = $this->checkIfOneightyArticle($aid)) {
-
 			// Check to see if the author of
 			// the article is logged into this
 			// local WordPress instance
@@ -355,7 +354,7 @@ class Wc_Actions {
 				// Update Post
 				wp_update_post(array(
 				'ID' => $aid,
-					'post_content' => $this->getArticle()->aSyndicationData[str_replace('{nameSpace}', $this->getNameSpace(), Wc_Config::Get('wordPress', 'postMetaKeyData'))]->content
+				'post_content' => $this->getArticle()->aSyndicationData[str_replace('{nameSpace}', $this->getNameSpace(), Wc_Config::Get('wordPress', 'postMetaKeyData'))]->content
 				));
 
 				// Remove post meta
@@ -405,7 +404,6 @@ class Wc_Actions {
 			// Return true because the artice
 			// was successfully removed
 			return true;
-
 		}
 
 
@@ -1049,7 +1047,6 @@ class Wc_Actions {
 		// Check for an article count
 		$syndicated = $wpdb->get_results("SELECT mediaplace_id FROM {$wpdb->prefix}mediaplace_posts WHERE post_id = '{$iWordPressId}'");
 		if (!empty($iWordPressId) && count($syndicated)) {
-
 			// Grab the article from
 			// the local database
 			$oArticle = get_post($iWordPressId);
